@@ -1,42 +1,59 @@
-# I will be thinking about a way to solving this by 
+
 def solve(arr, target, k):
-    def _search(arr, target):
-        i = 0
-        j = len(arr)-1
 
-        # how about thinking the values in different ordering
-
-        while i <=j:
-            mid = i + (j - i + 1)//2
+    def _find_first(arr, target):
+        i, j = 0, len(arr)-1
+        final_idx = -1
+    
+        while  i <= j:
+            mid = i + (j -i)//2
             if arr[mid] == target:
-                return mid
+                final_idx = mid
+                j = mid - 1
             elif arr[mid] > target:
                 j = mid - 1
             else:
                 i = mid + 1
+            
+        return final_idx
 
-        return -1
+    def _find_last(arr, target):
+        n = len(arr) 
+        i, j = 0, n-1
+        final_idx = -1
+    
+        while i <= j:
+            mid = i + (j -i)//2
+            if arr[mid] == target:
+                final_idx = mid
+                i = mid + 1
+            elif arr[mid] > target:
+                j = mid - 1
+            else:
+                i = mid + 1
+            
+        return final_idx
+        
+    
 
-
-    # i will be assumming that the number is always found in this list
-    idx_point = _search(arr, target)
-    if idx_point == -1:
+    first_idx = _find_first(arr, target)
+    last_idx = _find_last(arr, target)
+    
+    if last_idx + first_idx == -2:
         return True
     
-    count = 1
-    i = idx_point - 1
-    j = idx_point + 1
-
-    while i >=0 and arr[i] == target:
-        count +=1
-        i -=1
-
-    while j < len(arr) and arr[j] == target:
-        count +=1
-        j +=1
-
-    return count % k ==0
+    if first_idx == -1:
+        first_idx = last_idx
     
+    if last_idx == -1:
+        last_idx = first_idx
+    
+
+    count = last_idx - first_idx + 1
+    
+
+    return count % k == 0
+            
 
 def run_tests():
   tests = [
